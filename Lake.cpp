@@ -129,12 +129,6 @@ void Graph::printAllPathsUtil(int u, int d, bool visited[],
 	// current path[]
 	if (u == d)
 	{
-		
-		/*for (int i = 0; i < path_index; i++)
-		{
-			cout << path[i] << " ";
-			
-		}*/
 		if (distance > bestDistance && distance <= maxDistance)
 		{
 			bestDistance = distance;
@@ -143,11 +137,7 @@ void Graph::printAllPathsUtil(int u, int d, bool visited[],
 			{
 				bestPath[i] = path[i];
 			}
-		}
-		//cout <<" "<<distance << endl;
-		
-		
-
+		}			
 	}
 	else // If current vertex is not destination
 	{
