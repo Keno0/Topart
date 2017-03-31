@@ -4,7 +4,9 @@
 #include <stack>
 #include <limits.h>
 #include <string>
+#include <fstream>
 #define NINF INT_MIN
+#define READ_DATA_FROM_FILE 0
 using namespace std;
 
 // Graph is represented using adjacency list. Every node of adjacency list
@@ -60,6 +62,7 @@ public:
 
 	void PrintBestPathEndDistance();
 	void ReadDatasFromConsole();
+	void ReadDatasFromFile();
 	void CheckNumberOfCompTravel();
 
 };
@@ -458,6 +461,305 @@ void Graph::ReadDatasFromConsole()
 
 }
 
+void Graph::ReadDatasFromFile()
+{
+	ifstream infile;
+	infile.open("g:\\Kerti\\Projects\\ItechChallenge\\Topart\\Topart\\Topart\\test3.txt");
+	string distanceBetweenCities = "";
+	string numberOfComps = "";
+	int tempNumber = 0;
+	int indexOfNumber = 0;
+	getline(infile, city[0]);
+	for (int i = 0; i < V - 1; i++)
+	{
+		getline(infile, city[i]);
+	}
+	city[V - 1] = city[0];
+
+	for (int i = 0; i < V; i++)
+	{
+		for (int j = 0; j < V; j++)
+		{
+			indexOfPairCompCity[i][j] = false;
+		}
+	}
+
+	getline(infile, distanceBetweenCities);
+	for (int i = 0; i < distanceBetweenCities.length(); i++)
+	{
+
+		switch (distanceBetweenCities[i])
+		{
+		case ' ':
+			addEdge(indexOfNumber, indexOfNumber + 1, tempNumber);
+			indexOfNumber++;
+			tempNumber = 0;
+			break;
+		case '0':
+			tempNumber *= 10;
+			break;
+		case '1':
+			tempNumber *= 10;
+			tempNumber += 1;
+			break;
+		case '2':
+			tempNumber *= 10;
+			tempNumber += 2;
+			break;
+		case '3':
+			tempNumber *= 10;
+			tempNumber += 3;
+			break;
+		case '4':
+			tempNumber *= 10;
+			tempNumber += 4;
+			break;
+		case '5':
+			tempNumber *= 10;
+			tempNumber += 5;
+			break;
+		case '6':
+			tempNumber *= 10;
+			tempNumber += 6;
+			break;
+		case '7':
+			tempNumber *= 10;
+			tempNumber += 7;
+			break;
+		case '8':
+			tempNumber *= 10;
+			tempNumber += 8;
+			break;
+		case '9':
+			tempNumber *= 10;
+			tempNumber += 9;
+			break;
+		default:
+			break;
+		}
+	}
+
+	addEdge(indexOfNumber, indexOfNumber + 1, tempNumber);
+
+	tempNumber = 0;
+	//Number of comps
+	getline(infile, numberOfComps);
+	for (int i = 0; i < numberOfComps.length(); i++)
+	{
+
+		switch (numberOfComps[i])
+		{
+		case '0':
+			tempNumber *= 10;
+			break;
+		case '1':
+			tempNumber *= 10;
+			tempNumber += 1;
+			break;
+		case '2':
+			tempNumber *= 10;
+			tempNumber += 2;
+			break;
+		case '3':
+			tempNumber *= 10;
+			tempNumber += 3;
+			break;
+		case '4':
+			tempNumber *= 10;
+			tempNumber += 4;
+			break;
+		case '5':
+			tempNumber *= 10;
+			tempNumber += 5;
+			break;
+		case '6':
+			tempNumber *= 10;
+			tempNumber += 6;
+			break;
+		case '7':
+			tempNumber *= 10;
+			tempNumber += 7;
+			break;
+		case '8':
+			tempNumber *= 10;
+			tempNumber += 8;
+			break;
+		case '9':
+			tempNumber *= 10;
+			tempNumber += 9;
+			break;
+		default:
+			break;
+		}
+	}
+
+	compNumber = tempNumber;
+	string compDatas = "";
+	//Store indexes comp city pairs
+	for (int i = 0; i < compNumber; i++)
+	{
+		string firsCity = "";
+		string secondCity = "";
+		string comDistance = "";
+		int indexOfFirstCity = 0;
+		int indexOfSecondCity = 0;
+		int compDis = 0;
+		int tempIndex = 0;
+		getline(infile, compDatas);
+		//store comp data line by line
+		for (int i = 0; i < compDatas.length(); i++)
+		{
+			if (compDatas[i] == ' ')
+			{
+				if (tempIndex == 0)
+				{
+
+					firsCity = compDatas.substr(tempIndex, i - tempIndex);
+
+
+
+					tempIndex = i + 1;
+				}
+				else
+				{
+
+					secondCity = compDatas.substr(tempIndex, i - tempIndex);
+
+
+					tempIndex = i + 1;
+				}
+
+			}
+			if (i == (compDatas.length() - 1))
+			{
+				tempNumber = 0;
+				for (int j = tempIndex; j < compDatas.length(); j++)
+				{
+					switch (compDatas[j])
+					{
+					case '0':
+						tempNumber *= 10;
+						break;
+					case '1':
+						tempNumber *= 10;
+						tempNumber += 1;
+						break;
+					case '2':
+						tempNumber *= 10;
+						tempNumber += 2;
+						break;
+					case '3':
+						tempNumber *= 10;
+						tempNumber += 3;
+						break;
+					case '4':
+						tempNumber *= 10;
+						tempNumber += 4;
+						break;
+					case '5':
+						tempNumber *= 10;
+						tempNumber += 5;
+						break;
+					case '6':
+						tempNumber *= 10;
+						tempNumber += 6;
+						break;
+					case '7':
+						tempNumber *= 10;
+						tempNumber += 7;
+						break;
+					case '8':
+						tempNumber *= 10;
+						tempNumber += 8;
+						break;
+					case '9':
+						tempNumber *= 10;
+						tempNumber += 9;
+						break;
+					default:
+						break;
+					}
+				}
+			}
+
+			compDis = tempNumber;
+		}
+
+		for (int i = 0; i < V; i++)
+		{
+			if (city[i].compare(firsCity) == 0)
+			{
+				indexOfFirstCity = i;
+			}
+
+			if (city[i].compare(secondCity) == 0)
+			{
+				indexOfSecondCity = i;
+			}
+		}
+
+		addEdge(indexOfFirstCity, indexOfSecondCity, compDis);
+		indexOfPairCompCity[indexOfFirstCity][indexOfSecondCity] = true;
+		indexOfPairCompCity[indexOfSecondCity][indexOfFirstCity] = true;
+
+
+	}
+	//Store max distance
+	string maxDistanceValue = "";
+	getline(infile, maxDistanceValue);
+	tempNumber = 0;
+	for (int j = 0; j < maxDistanceValue.length(); j++)
+	{
+		switch (maxDistanceValue[j])
+		{
+		case '0':
+			tempNumber *= 10;
+			break;
+		case '1':
+			tempNumber *= 10;
+			tempNumber += 1;
+			break;
+		case '2':
+			tempNumber *= 10;
+			tempNumber += 2;
+			break;
+		case '3':
+			tempNumber *= 10;
+			tempNumber += 3;
+			break;
+		case '4':
+			tempNumber *= 10;
+			tempNumber += 4;
+			break;
+		case '5':
+			tempNumber *= 10;
+			tempNumber += 5;
+			break;
+		case '6':
+			tempNumber *= 10;
+			tempNumber += 6;
+			break;
+		case '7':
+			tempNumber *= 10;
+			tempNumber += 7;
+			break;
+		case '8':
+			tempNumber *= 10;
+			tempNumber += 8;
+			break;
+		case '9':
+			tempNumber *= 10;
+			tempNumber += 9;
+			break;
+		default:
+			break;
+		}
+	}
+
+	maxDistance = tempNumber;
+	infile.close();
+}
+
 void Graph::CheckNumberOfCompTravel()
 {
 	int compCounter=0;
@@ -479,6 +781,7 @@ void Graph::CheckNumberOfCompTravel()
 
 }
 
+
 // Driver program to test above functions
 int main()
 {
@@ -486,15 +789,34 @@ int main()
 	// 0, 1, 2, 3, 4, 5 with following mappings:
 	// 0=r, 1=s, 2=t, 3=x, 4=y, 5=z
 	int vertices = 0;
-	cin >> vertices;
-	vertices++;
-	Graph g(vertices);
-	g.ReadDatasFromConsole();
+#if READ_DATA_FROM_FILE
+	{
+		ifstream infile;
+		infile.open("g:\\Kerti\\Projects\\ItechChallenge\\Topart\\Topart\\Topart\\test3.txt");
+		//cin >> vertices;
+		infile >> vertices;
+		vertices++;
+		Graph g(vertices);		
+		g.ReadDatasFromFile();
+		int s = 0, d = vertices - 1;
+		g.printAllPaths(s, d);
 
-	int s = 0, d = vertices-1;	
-	g.printAllPaths(s, d);
+		g.CheckNumberOfCompTravel();
+	}
+#else
+	{
+		cin >> vertices;
+		vertices++;
+		Graph g(vertices);
+		g.ReadDatasFromConsole();
+		int s = 0, d = vertices - 1;
+		g.printAllPaths(s, d);
 
-	g.CheckNumberOfCompTravel();
+		g.CheckNumberOfCompTravel();
+	}
+#endif // READ_DATA_FROM_FILE
+
+
 
 	return 0;
 }

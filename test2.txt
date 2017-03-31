@@ -1,0 +1,11 @@
+5
+alma
+bela
+cecil
+denes
+elem
+30 15 60 45 60
+2
+cecil elem 30
+elem bela 10
+180
