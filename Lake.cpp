@@ -3,6 +3,7 @@
 #include <list>
 #include <stack>
 #include <limits.h>
+#include <string>
 #define NINF INT_MIN
 using namespace std;
 
@@ -35,8 +36,11 @@ class Graph
 	int distance = 0;
 	int bestPath[10000];
 	int bestPathIndex = 0;
-	int maxDistance = 210;
+	int maxDistance = 0;
 	int bestDistance = 0;
+	int compNumber = 0;
+	bool **indexOfPairCompCity;
+	string *city;
 
 	int V; // No. of vertices’
 
@@ -57,6 +61,9 @@ public:
 	void printAllPaths(int s, int d);
 
 	void PrintBestPathEndDistance();
+	void ReadDatasFromConsole();
+	void CheckNumberOfCompTravel();
+
 };
 
 void Graph::PrintBestPathEndDistance()
@@ -74,6 +81,12 @@ Graph::Graph(int V) // Constructor
 {
 	this->V = V;
 	adj = new list<AdjListNode>[V];
+	city = new string[V];
+	indexOfPairCompCity = new bool*[V];
+	for (int i = 0; i < V; i++)
+	{
+		indexOfPairCompCity[i] = new bool[V];
+	}
 }
 
 void Graph::addEdge(int u, int v, int weight)
@@ -183,11 +196,11 @@ void Graph::printAllPathsUtil(int u, int d, bool visited[],
 	if (u == d)
 	{
 		
-		for (int i = 0; i < path_index; i++)
+		/*for (int i = 0; i < path_index; i++)
 		{
 			cout << path[i] << " ";
 			
-		}
+		}*/
 		if (distance > bestDistance && distance <= maxDistance)
 		{
 			bestDistance = distance;
@@ -197,7 +210,7 @@ void Graph::printAllPathsUtil(int u, int d, bool visited[],
 				bestPath[i] = path[i];
 			}
 		}
-		cout <<" "<<distance << endl;
+		//cout <<" "<<distance << endl;
 		
 		
 
@@ -224,28 +237,351 @@ void Graph::printAllPathsUtil(int u, int d, bool visited[],
 	visited[u] = false;
 }
 
+void Graph::ReadDatasFromConsole()
+{
+	string distanceBetweenCities ="";
+	string numberOfComps = "";
+	int tempNumber = 0;
+	int indexOfNumber = 0;
+	getline(cin, city[0]);
+	for (int i = 0; i < V-1; i++)
+	{
+		getline(cin, city[i]);
+	}
+	city[V - 1] = city[0];
+
+	for (int i = 0; i < V; i++)
+	{
+		for (int j = 0; j < V; j++)
+		{
+			indexOfPairCompCity[i][j] = false;
+		}
+	}
+
+	getline(cin, distanceBetweenCities);
+	for (int i = 0; i < distanceBetweenCities.length(); i++)
+	{
+		
+		switch (distanceBetweenCities[i])
+		{
+		case ' ':
+			addEdge(indexOfNumber, indexOfNumber + 1, tempNumber);
+			indexOfNumber++;
+			tempNumber = 0;
+			break;
+		case '0':
+			tempNumber *= 10;
+			break;
+		case '1':
+			tempNumber *= 10;
+			tempNumber += 1;
+			break;
+		case '2':
+			tempNumber *= 10;
+			tempNumber += 2;
+			break;
+		case '3':
+			tempNumber *= 10;
+			tempNumber += 3;
+			break;
+		case '4':
+			tempNumber *= 10;
+			tempNumber += 4;
+			break;
+		case '5':
+			tempNumber *= 10;
+			tempNumber += 5;
+			break;
+		case '6':
+			tempNumber *= 10;
+			tempNumber += 6;
+			break;
+		case '7':
+			tempNumber *= 10;
+			tempNumber += 7;
+			break;
+		case '8':
+			tempNumber *= 10;
+			tempNumber += 8;
+			break;
+		case '9':
+			tempNumber *= 10;
+			tempNumber += 9;
+			break;
+		default:
+			break;
+		}
+	}
+
+	addEdge(indexOfNumber, indexOfNumber + 1, tempNumber);
+
+	tempNumber = 0;
+	//Number of comps
+	getline(cin, numberOfComps);
+	for (int i = 0; i < numberOfComps.length(); i++)
+	{
+
+		switch (numberOfComps[i])
+		{
+		case '0':
+			tempNumber *= 10;
+			break;
+		case '1':
+			tempNumber *= 10;
+			tempNumber += 1;
+			break;
+		case '2':
+			tempNumber *= 10;
+			tempNumber += 2;
+			break;
+		case '3':
+			tempNumber *= 10;
+			tempNumber += 3;
+			break;
+		case '4':
+			tempNumber *= 10;
+			tempNumber += 4;
+			break;
+		case '5':
+			tempNumber *= 10;
+			tempNumber += 5;
+			break;
+		case '6':
+			tempNumber *= 10;
+			tempNumber += 6;
+			break;
+		case '7':
+			tempNumber *= 10;
+			tempNumber += 7;
+			break;
+		case '8':
+			tempNumber *= 10;
+			tempNumber += 8;
+			break;
+		case '9':
+			tempNumber *= 10;
+			tempNumber += 9;
+			break;
+		default:
+			break;
+		}
+	}
+
+	compNumber = tempNumber;
+	string compDatas = "";
+	//Store indexes comp city pairs
+	for (int i = 0; i < compNumber; i++)
+	{
+		string firsCity = "";
+		string secondCity = "";
+		string comDistance = "";
+		int indexOfFirstCity = 0;
+		int indexOfSecondCity = 0;
+		int compDis = 0;
+		int tempIndex = 0;
+		getline(cin, compDatas);
+		//store comp data line by line
+		for (int i = 0; i < compDatas.length(); i++)
+		{
+			if (compDatas[i] == ' ')
+			{
+				if (tempIndex == 0)
+				{
+					
+						firsCity= compDatas.substr(tempIndex, i- tempIndex);
+
+					
+
+					tempIndex = i + 1;
+				}
+				else
+				{
+					
+					secondCity = compDatas.substr(tempIndex, i - tempIndex);
+					
+
+					tempIndex = i + 1;
+				}
+				
+			}
+			if (i == (compDatas.length() - 1))
+			{
+				tempNumber = 0;
+				for (int j = tempIndex; j < compDatas.length(); j++)
+				{
+					switch (compDatas[j])
+					{
+					case '0':
+						tempNumber *= 10;
+						break;
+					case '1':
+						tempNumber *= 10;
+						tempNumber += 1;
+						break;
+					case '2':
+						tempNumber *= 10;
+						tempNumber += 2;
+						break;
+					case '3':
+						tempNumber *= 10;
+						tempNumber += 3;
+						break;
+					case '4':
+						tempNumber *= 10;
+						tempNumber += 4;
+						break;
+					case '5':
+						tempNumber *= 10;
+						tempNumber += 5;
+						break;
+					case '6':
+						tempNumber *= 10;
+						tempNumber += 6;
+						break;
+					case '7':
+						tempNumber *= 10;
+						tempNumber += 7;
+						break;
+					case '8':
+						tempNumber *= 10;
+						tempNumber += 8;
+						break;
+					case '9':
+						tempNumber *= 10;
+						tempNumber += 9;
+						break;
+					default:
+						break;
+					}
+				}
+			}
+
+			compDis = tempNumber;
+		}
+		
+		for (int i = 0; i < V; i++)
+		{
+			if (city[i].compare(firsCity) == 0)
+			{
+				indexOfFirstCity = i;
+			}
+
+			if (city[i].compare(secondCity) == 0)
+			{
+				indexOfSecondCity = i;
+			}
+		}
+
+		addEdge(indexOfFirstCity, indexOfSecondCity, compDis);
+		indexOfPairCompCity[indexOfFirstCity][indexOfSecondCity] = true;
+		indexOfPairCompCity[indexOfSecondCity][indexOfFirstCity] = true;
+
+		
+	}
+	//Store max distance
+	string maxDistanceValue = "";
+	getline(cin, maxDistanceValue);
+	tempNumber = 0;
+	for (int j = 0; j < maxDistanceValue.length(); j++)
+	{
+		switch (maxDistanceValue[j])
+		{
+		case '0':
+			tempNumber *= 10;
+			break;
+		case '1':
+			tempNumber *= 10;
+			tempNumber += 1;
+			break;
+		case '2':
+			tempNumber *= 10;
+			tempNumber += 2;
+			break;
+		case '3':
+			tempNumber *= 10;
+			tempNumber += 3;
+			break;
+		case '4':
+			tempNumber *= 10;
+			tempNumber += 4;
+			break;
+		case '5':
+			tempNumber *= 10;
+			tempNumber += 5;
+			break;
+		case '6':
+			tempNumber *= 10;
+			tempNumber += 6;
+			break;
+		case '7':
+			tempNumber *= 10;
+			tempNumber += 7;
+			break;
+		case '8':
+			tempNumber *= 10;
+			tempNumber += 8;
+			break;
+		case '9':
+			tempNumber *= 10;
+			tempNumber += 9;
+			break;
+		default:
+			break;
+		}
+	}
+
+	maxDistance = tempNumber;
+
+}
+
+void Graph::CheckNumberOfCompTravel()
+{
+	int compCounter=0;
+	for (int i = 0; i < bestPathIndex -1; i++)
+	{
+		if (indexOfPairCompCity[bestPath[i]][bestPath[i + 1]])
+		{
+			compCounter++;
+		}
+	}
+	cout << compCounter << endl;
+	for (int i = 0; i < bestPathIndex -1; i++)
+	{
+		if (indexOfPairCompCity[bestPath[i]][bestPath[i + 1]])
+		{
+			cout << city[bestPath[i]] << " " << city[bestPath[i + 1]] << endl;
+		}
+	}
+
+}
+
 // Driver program to test above functions
 int main()
 {
 	// Create a graph given in the above diagram.  Here vertex numbers are
 	// 0, 1, 2, 3, 4, 5 with following mappings:
 	// 0=r, 1=s, 2=t, 3=x, 4=y, 5=z
-	Graph g(6);
-	g.addEdge(0, 1, 30);
-	g.addEdge(1, 2, 15);
-	g.addEdge(2, 3, 60);
-	g.addEdge(3, 4, 45);
-	g.addEdge(4, 5, 60);
-	g.addEdge(2, 4, 30);
+	int vertices = 0;
+	cin >> vertices;
+	vertices++;
+	Graph g(vertices);
+	g.ReadDatasFromConsole();
+	//g.addEdge(0, 1, 30);
+	//g.addEdge(1, 2, 15);
+	//g.addEdge(2, 3, 60);
+	//g.addEdge(3, 4, 45);
+	//g.addEdge(4, 5, 60);
+	//g.addEdge(2, 4, 30);
 
 	//int s = 1;
 	//cout << "Following are longest distances from source vertex " << s << " \n";
 	//g.longestPath(s);
-	int s = 0, d = 5;
-	cout << "Following are all different paths from " << s	<< " to " << d << endl;
+	int s = 0, d = vertices-1;
+	//cout << "Following are all different paths from " << s	<< " to " << d << endl;
 	g.printAllPaths(s, d);
 
-	g.PrintBestPathEndDistance();
+	//g.PrintBestPathEndDistance();
+	g.CheckNumberOfCompTravel();
 
 	return 0;
 }
